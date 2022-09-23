@@ -73,9 +73,10 @@ class LSFSAdam(FairseqOptimizer):
         else:
             raise AttributeError("Attributes can neither be read via `args` nor `cfg` attributes.")
 
+        betas = eval(args.adam_betas) if isinstance(args.adam_betas, str) else args.adam_betas
         return {
             "lr": args.lr[0],
-            "betas": eval(args.adam_betas),
+            "betas": betas,
             "eps": args.adam_eps,
             "weight_decay": args.weight_decay,
         }

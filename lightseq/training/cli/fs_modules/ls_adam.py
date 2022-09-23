@@ -66,11 +66,18 @@ class LSFSAdam(FairseqOptimizer):
         resume training using a different set of optimizer args, e.g., with a
         different learning rate.
         """
+        if hasattr(self, "args"):
+            args = self.args
+        elif hasattr(self, "cfg"):
+            args = self.cfg
+        else:
+            raise AttributeError("Attributes can neither be read via `args` nor `cfg` attributes.")
+
         return {
-            "lr": self.args.lr[0],
-            "betas": eval(self.args.adam_betas),
-            "eps": self.args.adam_eps,
-            "weight_decay": self.args.weight_decay,
+            "lr": args.lr[0],
+            "betas": eval(args.adam_betas),
+            "eps": args.adam_eps,
+            "weight_decay": args.weight_decay,
         }
 
     def average_params(self):

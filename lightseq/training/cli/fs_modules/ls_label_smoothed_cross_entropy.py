@@ -43,13 +43,21 @@ class LSLabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         self.sentence_avg = sentence_avg
         self.eps = label_smoothing
         self.ignore_prefix_size = ignore_prefix_size
+        
+        if hasattr(self, "args"):
+            args = task.args
+        elif hasattr(self, "cfg"):
+            args = task.cfg
+        else:
+            raise AttributeError("Task attributes can neither be read via `args` nor `cfg` attributes.")
+
         # self.report_accuracy = report_accuracy
         config = LSCrossEntropyLayer.get_config(
-            max_batch_tokens=task.args.max_tokens,
+            max_batch_tokens=args.max_tokens,
             padding_idx=self.padding_idx,
             epsilon=label_smoothing,
-            fp16=task.args.fp16,
-            local_rank=task.args.device_id,
+            fp16=args.fp16,
+            local_rank=args.device_id,
         )
         self.ls_cross_entropy = LSCrossEntropyLayer(config)
 
